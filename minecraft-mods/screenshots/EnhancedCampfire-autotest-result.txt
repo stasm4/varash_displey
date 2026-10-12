@@ -1,0 +1,18 @@
+RESULT: PASS
+PASS all 192 block states have models
+PASS effect texture flame_sheet
+PASS effect texture flame_sheet_add
+PASS effect texture glow_radial
+PASS sound event crackle
+PASS sound event pop
+PASS sound event hiss
+PASS sound event roar
+PASS campfire particles are alive
+PASS client block entity present
+PASS screenshot campfire_night_overview
+PASS screenshot campfire_night_closeup
+PASS screenshot campfire_night_side
+PASS screenshot campfire_day
+PASS screenshot campfire_rain_night
+PASS extinguished campfire smoulders on the client
+PASS screenshot campfire_smouldering
