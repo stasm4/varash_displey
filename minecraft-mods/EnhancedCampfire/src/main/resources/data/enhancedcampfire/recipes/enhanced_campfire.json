@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " S ",
+    "SCS",
+    "BLB"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "C": {
+      "tag": "minecraft:coals"
+    },
+    "L": {
+      "tag": "minecraft:logs_that_burn"
+    },
+    "B": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "result": {
+    "item": "enhancedcampfire:enhanced_campfire"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:campfire"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "tag": "minecraft:logs_that_burn"
+    }
+  ],
+  "result": {
+    "item": "enhancedcampfire:enhanced_campfire"
+  }
+}

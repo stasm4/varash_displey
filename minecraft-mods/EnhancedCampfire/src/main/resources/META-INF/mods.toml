@@ -1,0 +1,30 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+issueTrackerURL="https://github.com/stasm4/varash_displey/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''
+A big, atmospheric campfire: detailed log models in three layouts, a large multi-layer animated flame,
+layered smoke drifting with the wind, sparks, embers and ash, a flickering warm light pool on the ground,
+procedurally generated crackle sounds, smouldering embers after it is put out - and full vanilla campfire
+behaviour (cooking, lighting, dousing, signal smoke, bees).
+'''
+
+[[dependencies.${mod_id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"

@@ -1,0 +1,118 @@
+{
+  "block.enhanced_campfire.crackle": {
+    "subtitle": "subtitles.enhancedcampfire.crackle",
+    "sounds": [
+      {
+        "name": "enhancedcampfire:crackle/crackle1",
+        "weight": 2
+      },
+      {
+        "name": "enhancedcampfire:crackle/crackle2",
+        "weight": 2
+      },
+      {
+        "name": "enhancedcampfire:crackle/crackle3",
+        "weight": 2
+      },
+      {
+        "name": "enhancedcampfire:crackle/crackle4",
+        "weight": 2
+      },
+      {
+        "name": "enhancedcampfire:crackle/crackle5",
+        "weight": 2
+      },
+      {
+        "name": "enhancedcampfire:crackle/crackle6",
+        "weight": 2
+      },
+      {
+        "name": "minecraft:block/campfire/crackle1",
+        "volume": 0.8,
+        "weight": 1
+      },
+      {
+        "name": "minecraft:block/campfire/crackle2",
+        "volume": 0.8,
+        "weight": 1
+      },
+      {
+        "name": "minecraft:block/campfire/crackle3",
+        "volume": 0.8,
+        "weight": 1
+      },
+      {
+        "name": "minecraft:block/campfire/crackle4",
+        "volume": 0.8,
+        "weight": 1
+      },
+      {
+        "name": "minecraft:block/campfire/crackle5",
+        "volume": 0.8,
+        "weight": 1
+      },
+      {
+        "name": "minecraft:block/campfire/crackle6",
+        "volume": 0.8,
+        "weight": 1
+      }
+    ]
+  },
+  "block.enhanced_campfire.pop": {
+    "subtitle": "subtitles.enhancedcampfire.pop",
+    "sounds": [
+      {
+        "name": "enhancedcampfire:pop/pop1"
+      },
+      {
+        "name": "enhancedcampfire:pop/pop2"
+      },
+      {
+        "name": "enhancedcampfire:pop/pop3"
+      },
+      {
+        "name": "enhancedcampfire:pop/pop4"
+      }
+    ]
+  },
+  "block.enhanced_campfire.hiss": {
+    "subtitle": "subtitles.enhancedcampfire.hiss",
+    "sounds": [
+      {
+        "name": "enhancedcampfire:hiss/hiss1"
+      },
+      {
+        "name": "enhancedcampfire:hiss/hiss2"
+      },
+      {
+        "name": "enhancedcampfire:hiss/hiss3"
+      },
+      {
+        "name": "minecraft:random/fizz",
+        "volume": 0.4
+      }
+    ]
+  },
+  "block.enhanced_campfire.roar": {
+    "subtitle": "subtitles.enhancedcampfire.roar",
+    "sounds": [
+      {
+        "name": "enhancedcampfire:roar/roar1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "enhancedcampfire:roar/roar2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "enhancedcampfire:roar/roar3",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "minecraft:fire/fire",
+        "volume": 0.7,
+        "attenuation_distance": 12
+      }
+    ]
+  }
+}
