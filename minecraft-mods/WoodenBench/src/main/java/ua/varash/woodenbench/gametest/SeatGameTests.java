@@ -52,6 +52,16 @@ public final class SeatGameTests {
         return player;
     }
 
+    private static String describeRay(GameTestHelper helper, Player player) {
+        BlockPos abs = helper.absolutePos(SEAT);
+        net.minecraft.world.phys.Vec3 eye = player.getEyePosition();
+        net.minecraft.world.phys.BlockHitResult hit = helper.getLevel().clip(new net.minecraft.world.level.ClipContext(eye,
+                net.minecraft.world.phys.Vec3.atCenterOf(abs), net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                net.minecraft.world.level.ClipContext.Fluid.NONE, player));
+        return " [eye=" + eye + " seat=" + abs + " hit=" + hit.getType() + " at " + hit.getBlockPos() + " "
+                + helper.getLevel().getBlockState(hit.getBlockPos()) + "]";
+    }
+
     @GameTest(template = "platform")
     public static void benchesJoinIntoLongBench(GameTestHelper helper) {
         // facing north: the sitter's left is west (-x)
@@ -74,7 +84,7 @@ public final class SeatGameTests {
         helper.setBlock(SEAT, bench(Direction.NORTH));
         Player first = playerNear(helper, 2);
         Result sat = SeatManager.trySit(first, helper.absolutePos(SEAT));
-        helper.assertTrue(sat == Result.SAT, "first player must sit, got " + sat);
+        helper.assertTrue(sat == Result.SAT, "first player must sit, got " + sat + describeRay(helper, first));
         helper.assertTrue(first.getVehicle() instanceof SeatEntity, "first player must ride a seat");
         SeatEntity seat = (SeatEntity) first.getVehicle();
         double surface = helper.absolutePos(SEAT).getY() + BenchBlock.SEAT_HEIGHT;
@@ -99,7 +109,7 @@ public final class SeatGameTests {
         helper.setBlock(SEAT, ModRegistry.SEAT_BOARDS.get(Wood.SPRUCE).get().defaultBlockState());
         Player player = playerNear(helper, 2);
         Result sat = SeatManager.trySit(player, helper.absolutePos(SEAT));
-        helper.assertTrue(sat == Result.SAT, "must sit on the seat board, got " + sat);
+        helper.assertTrue(sat == Result.SAT, "must sit on the seat board, got " + sat + describeRay(helper, player));
         double surface = helper.absolutePos(SEAT).getY() + SeatBoardBlock.SEAT_HEIGHT;
         helper.assertTrue(Math.abs(player.getVehicle().getY() - surface) < 1.0E-3, "seat on the board surface");
         helper.getLevel().destroyBlock(helper.absolutePos(SEAT), true);
