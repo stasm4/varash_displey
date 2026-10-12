@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "seat_board",
+  "pattern": [
+    "SSS",
+    "L L"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:warped_slab"
+    },
+    "L": {
+      "item": "minecraft:warped_stem"
+    }
+  },
+  "result": {
+    "item": "woodenbench:warped_seat_board",
+    "count": 2
+  }
+}

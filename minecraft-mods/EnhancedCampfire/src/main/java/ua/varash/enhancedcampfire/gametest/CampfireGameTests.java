@@ -49,7 +49,7 @@ public final class CampfireGameTests {
     @GameTest(template = "platform", timeoutTicks = 200)
     public static void cooksRawFood(GameTestHelper helper) {
         place(helper);
-        EnhancedCampfireBlockEntity campfire = helper.getBlockEntity(POS);
+        EnhancedCampfireBlockEntity campfire = (EnhancedCampfireBlockEntity) helper.getBlockEntity(POS);
         ItemStack beef = new ItemStack(Items.BEEF);
         helper.assertTrue(campfire.getCookableRecipe(beef).isPresent(), "raw beef must have a campfire recipe");
         helper.assertTrue(campfire.placeFood(null, beef, 40), "food must be accepted");
@@ -102,7 +102,7 @@ public final class CampfireGameTests {
     @GameTest(template = "platform")
     public static void breakingDropsFoodAndCharcoal(GameTestHelper helper) {
         place(helper);
-        EnhancedCampfireBlockEntity campfire = helper.getBlockEntity(POS);
+        EnhancedCampfireBlockEntity campfire = (EnhancedCampfireBlockEntity) helper.getBlockEntity(POS);
         campfire.placeFood(null, new ItemStack(Items.PORKCHOP), 600);
         helper.getLevel().destroyBlock(helper.absolutePos(POS), true);
         helper.assertItemEntityPresent(Items.PORKCHOP, POS, 2.0D);
@@ -113,7 +113,7 @@ public final class CampfireGameTests {
     @GameTest(template = "platform")
     public static void contentsSurviveSaveAndLoad(GameTestHelper helper) {
         BlockState state = place(helper);
-        EnhancedCampfireBlockEntity campfire = helper.getBlockEntity(POS);
+        EnhancedCampfireBlockEntity campfire = (EnhancedCampfireBlockEntity) helper.getBlockEntity(POS);
         campfire.placeFood(null, new ItemStack(Items.CHICKEN), 600);
         CompoundTag tag = campfire.saveWithoutMetadata();
         EnhancedCampfireBlockEntity copy = new EnhancedCampfireBlockEntity(helper.absolutePos(POS), state);

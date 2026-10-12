@@ -1,0 +1,9 @@
+{
+  "parent": "woodenbench:block/template_seat_board",
+  "textures": {
+    "board": "woodenbench:block/spruce_board",
+    "end": "woodenbench:block/spruce_end",
+    "bark": "woodenbench:block/spruce_bark",
+    "stump_top": "woodenbench:block/spruce_stump_top"
+  }
+}

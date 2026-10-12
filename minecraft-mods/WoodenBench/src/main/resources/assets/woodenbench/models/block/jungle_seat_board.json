@@ -1,0 +1,9 @@
+{
+  "parent": "woodenbench:block/template_seat_board",
+  "textures": {
+    "board": "woodenbench:block/jungle_board",
+    "end": "woodenbench:block/jungle_end",
+    "bark": "woodenbench:block/jungle_bark",
+    "stump_top": "woodenbench:block/jungle_stump_top"
+  }
+}

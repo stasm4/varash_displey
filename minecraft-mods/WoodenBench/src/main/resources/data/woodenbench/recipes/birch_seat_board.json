@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "seat_board",
+  "pattern": [
+    "SSS",
+    "L L"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:birch_slab"
+    },
+    "L": {
+      "item": "minecraft:birch_log"
+    }
+  },
+  "result": {
+    "item": "woodenbench:birch_seat_board",
+    "count": 2
+  }
+}

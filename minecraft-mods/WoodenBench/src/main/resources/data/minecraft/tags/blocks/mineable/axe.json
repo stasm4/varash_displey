@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "woodenbench:oak_seat_board",
+    "woodenbench:oak_bench",
+    "woodenbench:spruce_seat_board",
+    "woodenbench:spruce_bench",
+    "woodenbench:birch_seat_board",
+    "woodenbench:birch_bench",
+    "woodenbench:jungle_seat_board",
+    "woodenbench:jungle_bench",
+    "woodenbench:acacia_seat_board",
+    "woodenbench:acacia_bench",
+    "woodenbench:dark_oak_seat_board",
+    "woodenbench:dark_oak_bench",
+    "woodenbench:mangrove_seat_board",
+    "woodenbench:mangrove_bench",
+    "woodenbench:cherry_seat_board",
+    "woodenbench:cherry_bench",
+    "woodenbench:crimson_seat_board",
+    "woodenbench:crimson_bench",
+    "woodenbench:warped_seat_board",
+    "woodenbench:warped_bench"
+  ]
+}

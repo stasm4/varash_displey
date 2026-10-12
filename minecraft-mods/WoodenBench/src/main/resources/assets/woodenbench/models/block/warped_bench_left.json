@@ -1,0 +1,8 @@
+{
+  "parent": "woodenbench:block/template_bench_left",
+  "textures": {
+    "planks": "woodenbench:block/warped_seat_planks",
+    "leg": "woodenbench:block/warped_leg",
+    "end": "woodenbench:block/warped_end"
+  }
+}

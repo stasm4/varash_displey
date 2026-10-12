@@ -1,0 +1,9 @@
+{
+  "parent": "woodenbench:block/template_seat_board",
+  "textures": {
+    "board": "woodenbench:block/cherry_board",
+    "end": "woodenbench:block/cherry_end",
+    "bark": "woodenbench:block/cherry_bark",
+    "stump_top": "woodenbench:block/cherry_stump_top"
+  }
+}

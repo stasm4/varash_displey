@@ -1,0 +1,27 @@
+{
+  "block.seat.sit": {
+    "subtitle": "subtitles.woodenbench.sit",
+    "sounds": [
+      {
+        "name": "minecraft:block/wood/step1",
+        "volume": 0.7,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:block/wood/step3",
+        "volume": 0.7,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:block/wood/step5",
+        "volume": 0.7,
+        "pitch": 0.85
+      },
+      {
+        "name": "minecraft:block/ladder/step2",
+        "volume": 0.6,
+        "pitch": 0.7
+      }
+    ]
+  }
+}

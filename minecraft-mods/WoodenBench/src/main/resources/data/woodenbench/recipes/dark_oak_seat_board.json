@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "seat_board",
+  "pattern": [
+    "SSS",
+    "L L"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:dark_oak_slab"
+    },
+    "L": {
+      "item": "minecraft:dark_oak_log"
+    }
+  },
+  "result": {
+    "item": "woodenbench:dark_oak_seat_board",
+    "count": 2
+  }
+}

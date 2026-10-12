@@ -2,10 +2,10 @@ package ua.varash.enhancedcampfire.client.fx;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import ua.varash.enhancedcampfire.block.EnhancedCampfireBlock;
 import ua.varash.enhancedcampfire.block.EnhancedCampfireBlockEntity;
 
 /**
@@ -29,7 +29,7 @@ public final class CampfireFxState {
     private int[] glowCells = new int[0];
 
     private CampfireFxState(BlockPos pos) {
-        long s = Mth.getSeed(pos);
+        long s = EnhancedCampfireBlock.positionHash(pos);
         this.seed = (int) (s ^ (s >>> 32)) & 0x7fffff;
     }
 

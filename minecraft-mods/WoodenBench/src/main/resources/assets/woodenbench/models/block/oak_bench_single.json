@@ -1,0 +1,8 @@
+{
+  "parent": "woodenbench:block/template_bench_single",
+  "textures": {
+    "planks": "woodenbench:block/oak_seat_planks",
+    "leg": "woodenbench:block/oak_leg",
+    "end": "woodenbench:block/oak_end"
+  }
+}

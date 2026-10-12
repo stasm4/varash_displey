@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,shape=single": {
+      "model": "woodenbench:block/dark_oak_bench_single"
+    },
+    "facing=north,shape=left": {
+      "model": "woodenbench:block/dark_oak_bench_left"
+    },
+    "facing=north,shape=middle": {
+      "model": "woodenbench:block/dark_oak_bench_middle"
+    },
+    "facing=north,shape=right": {
+      "model": "woodenbench:block/dark_oak_bench_right"
+    },
+    "facing=east,shape=single": {
+      "model": "woodenbench:block/dark_oak_bench_single",
+      "y": 90
+    },
+    "facing=east,shape=left": {
+      "model": "woodenbench:block/dark_oak_bench_left",
+      "y": 90
+    },
+    "facing=east,shape=middle": {
+      "model": "woodenbench:block/dark_oak_bench_middle",
+      "y": 90
+    },
+    "facing=east,shape=right": {
+      "model": "woodenbench:block/dark_oak_bench_right",
+      "y": 90
+    },
+    "facing=south,shape=single": {
+      "model": "woodenbench:block/dark_oak_bench_single",
+      "y": 180
+    },
+    "facing=south,shape=left": {
+      "model": "woodenbench:block/dark_oak_bench_left",
+      "y": 180
+    },
+    "facing=south,shape=middle": {
+      "model": "woodenbench:block/dark_oak_bench_middle",
+      "y": 180
+    },
+    "facing=south,shape=right": {
+      "model": "woodenbench:block/dark_oak_bench_right",
+      "y": 180
+    },
+    "facing=west,shape=single": {
+      "model": "woodenbench:block/dark_oak_bench_single",
+      "y": 270
+    },
+    "facing=west,shape=left": {
+      "model": "woodenbench:block/dark_oak_bench_left",
+      "y": 270
+    },
+    "facing=west,shape=middle": {
+      "model": "woodenbench:block/dark_oak_bench_middle",
+      "y": 270
+    },
+    "facing=west,shape=right": {
+      "model": "woodenbench:block/dark_oak_bench_right",
+      "y": 270
+    }
+  }
+}

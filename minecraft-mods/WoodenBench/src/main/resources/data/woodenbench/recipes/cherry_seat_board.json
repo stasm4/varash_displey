@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "seat_board",
+  "pattern": [
+    "SSS",
+    "L L"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:cherry_slab"
+    },
+    "L": {
+      "item": "minecraft:cherry_log"
+    }
+  },
+  "result": {
+    "item": "woodenbench:cherry_seat_board",
+    "count": 2
+  }
+}
