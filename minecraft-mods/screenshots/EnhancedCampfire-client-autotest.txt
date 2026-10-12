@@ -1,5 +1,5 @@
 RESULT: PASS
-PASS all 192 block states have models
+PASS all 768 block states have models
 PASS effect texture flame_sheet
 PASS effect texture flame_sheet_add
 PASS effect texture glow_radial
@@ -12,7 +12,10 @@ PASS client block entity present
 PASS screenshot campfire_night_overview
 PASS screenshot campfire_night_closeup
 PASS screenshot campfire_night_side
-PASS screenshot campfire_day
+PASS screenshot campfire_night_top
+PASS screenshot campfire_day_closeup
+PASS screenshot campfire_day_overview
 PASS screenshot campfire_rain_night
 PASS extinguished campfire smoulders on the client
+PASS the other parts of the 2x2 fire went out too
 PASS screenshot campfire_smouldering
