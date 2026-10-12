@@ -100,3 +100,46 @@ jobs:
             minecraft-mods/${{ matrix.project }}/run/logs/
             minecraft-mods/${{ matrix.project }}/build/reports/
           if-no-files-found: ignore
+
+  release:
+    name: GitHub Release (jars + source zips)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: '*-jar-and-screenshots'
+          path: artifacts
+
+      - name: Package jars and source archives
+        run: |
+          set -e
+          mkdir -p release
+          cp artifacts/EnhancedCampfire-jar-and-screenshots/EnhancedCampfire-*.jar release/EnhancedCampfire.jar
+          cp artifacts/WoodenBench-jar-and-screenshots/WoodenBench-*.jar release/WoodenBench.jar
+          cp minecraft-mods/README.md release/README.md
+          cd minecraft-mods
+          zip -qr ../release/EnhancedCampfire.zip EnhancedCampfire
+          zip -qr ../release/WoodenBench.zip WoodenBench
+          mkdir -p /tmp/bundle/jars && cp ../release/*.jar /tmp/bundle/jars/
+          zip -qr ../release/MinecraftMods.zip EnhancedCampfire WoodenBench tools README.md TEST_RESULTS.md screenshots
+          (cd /tmp/bundle && zip -qr "$GITHUB_WORKSPACE/release/MinecraftMods.zip" jars)
+          cd ..
+          (cd release && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt)
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: minecraft-mods-v1.0.0
+          name: Enhanced Campfire & Wooden Bench 1.0.0 (Minecraft 1.20.1 Forge)
+          target_commitish: ${{ github.sha }}
+          body: |
+            Two independent Forge mods for Minecraft 1.20.1 (Forge 47.3.0+, Java 17).
+            Built, GameTested on a Forge server and smoke-tested in a real client by CI run ${{ github.run_id }} (commit ${{ github.sha }}).
+            Install: put EnhancedCampfire.jar and/or WoodenBench.jar into .minecraft/mods (and the server's mods folder).
+            See README.md for features and TEST_RESULTS.md (in MinecraftMods.zip) for the test report.
+          files: release/*
+          make_latest: true
