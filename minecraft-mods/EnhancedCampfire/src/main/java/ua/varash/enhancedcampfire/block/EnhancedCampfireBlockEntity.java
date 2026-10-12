@@ -235,8 +235,8 @@ public class EnhancedCampfireBlockEntity extends BlockEntity implements Clearabl
 
     @Override
     public AABB getRenderBoundingBox() {
-        // flames rise ~2 blocks; the warm light pool on the ground reaches 3 blocks around
+        // 2x2 fire; flames rise ~2.6 blocks, the warm light pool on the ground reaches ~5.6 blocks from the centre
         BlockPos pos = getBlockPos();
-        return new AABB(pos.getX() - 3, pos.getY() - 1, pos.getZ() - 3, pos.getX() + 4, pos.getY() + 3, pos.getZ() + 4);
+        return new AABB(pos.getX() - 5, pos.getY() - 2, pos.getZ() - 5, pos.getX() + 7, pos.getY() + 4, pos.getZ() + 7);
     }
 }

@@ -1,9 +1,9 @@
 {
   "block.enhancedcampfire.enhanced_campfire": "Enhanced Campfire",
-  "tooltip.enhancedcampfire.enhanced_campfire": "A large, crackling campfire. Cooks food like a campfire.",
+  "tooltip.enhancedcampfire.enhanced_campfire": "A big 2x2 fire pit. Cooks food like a campfire.",
   "subtitles.enhancedcampfire.crackle": "Campfire crackles",
   "subtitles.enhancedcampfire.pop": "Firewood pops",
   "subtitles.enhancedcampfire.hiss": "Campfire hisses",
-  "subtitles.enhancedcampfire.roar": "Fire roars",
+  "subtitles.enhancedcampfire.roar": "Fire murmurs",
   "enhancedcampfire.configuration.title": "Enhanced Campfire"
 }

@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -38,7 +39,8 @@ public final class ModRegistry {
                     .sound(SoundType.WOOD)
                     .lightLevel(EnhancedCampfireBlock::lightLevel)
                     .noOcclusion()
-                    .ignitedByLava()));
+                    .ignitedByLava()
+                    .pushReaction(PushReaction.BLOCK)));
 
     public static final RegistryObject<Item> CAMPFIRE_ITEM = ITEMS.register("enhanced_campfire",
             () -> new BlockItem(CAMPFIRE.get(), new Item.Properties()));

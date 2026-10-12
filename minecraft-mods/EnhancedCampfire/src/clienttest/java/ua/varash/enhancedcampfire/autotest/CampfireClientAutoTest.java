@@ -6,6 +6,7 @@ import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -106,7 +107,7 @@ public final class CampfireClientAutoTest {
             case 40 -> server.execute(() -> buildScene(server));
             case 60 -> {
                 mc.options.hideGui = true;
-                view(server, 0.5, 1.0, 6.5, 180.0F, 18.0F);
+                view(server, 1.0, 1.6, 10.5, 180.0F, 14.0F);
             }
             case 70 -> checkResources(mc);
             case 200 -> {
@@ -114,35 +115,42 @@ public final class CampfireClientAutoTest {
                 check(mc.level.getBlockEntity(origin) instanceof EnhancedCampfireBlockEntity, "client block entity present");
                 shot(mc, "campfire_night_overview");
             }
-            case 205 -> view(server, 0.5, 0.6, 3.2, 180.0F, 30.0F);
-            case 280 -> shot(mc, "campfire_night_closeup");
-            case 285 -> view(server, -3.5, 0.2, 2.5, 235.0F, 12.0F);
-            case 360 -> shot(mc, "campfire_night_side");
-            case 365 -> server.execute(() -> {
+            case 205 -> view(server, 1.0, 0.9, 6.0, 180.0F, 14.0F);
+            case 290 -> shot(mc, "campfire_night_closeup");
+            case 295 -> view(server, -4.2, 0.6, 4.8, 225.0F, 8.0F);
+            case 370 -> shot(mc, "campfire_night_side");
+            case 375 -> view(server, 1.0, 2.6, 4.2, 180.0F, 40.0F);
+            case 450 -> shot(mc, "campfire_night_top");
+            case 455 -> server.execute(() -> {
                 server.overworld().setDayTime(6000L);
-                view(server, 0.5, 1.0, 6.5, 180.0F, 18.0F);
+                view(server, 1.0, 0.9, 6.0, 180.0F, 14.0F);
             });
-            case 440 -> shot(mc, "campfire_day");
-            case 445 -> server.execute(() -> {
+            case 530 -> shot(mc, "campfire_day_closeup");
+            case 535 -> view(server, 1.0, 1.6, 10.5, 180.0F, 14.0F);
+            case 600 -> shot(mc, "campfire_day_overview");
+            case 605 -> server.execute(() -> {
                 server.overworld().setDayTime(18000L);
                 server.overworld().setWeatherParameters(0, 6000, true, false);
-                view(server, 0.5, 0.6, 3.6, 180.0F, 25.0F);
+                view(server, 1.0, 0.9, 6.5, 180.0F, 16.0F);
             });
-            case 560 -> shot(mc, "campfire_rain_night");
-            case 565 -> server.execute(() -> {
+            case 720 -> shot(mc, "campfire_rain_night");
+            case 725 -> server.execute(() -> {
                 server.overworld().setWeatherParameters(6000, 0, false, false);
                 ServerLevel level = server.overworld();
                 BlockState lit = level.getBlockState(origin);
                 level.setBlock(origin, lit.setValue(CampfireBlock.LIT, Boolean.FALSE), 3);
-                view(server, 0.5, 0.4, 2.8, 180.0F, 35.0F);
+                view(server, 1.0, 0.8, 5.0, 180.0F, 28.0F);
             });
-            case 640 -> {
+            case 800 -> {
                 BlockState state = mc.level.getBlockState(origin);
                 check(!state.getValue(CampfireBlock.LIT) && state.getValue(EnhancedCampfireBlock.SMOULDERING),
                         "extinguished campfire smoulders on the client");
+                BlockState part = mc.level.getBlockState(origin.offset(1, 0, 1));
+                check(part.is(ModRegistry.CAMPFIRE.get()) && !part.getValue(CampfireBlock.LIT),
+                        "the other parts of the 2x2 fire went out too");
                 shot(mc, "campfire_smouldering");
             }
-            case 660 -> finish(mc);
+            case 820 -> finish(mc);
             default -> {
             }
         }
@@ -156,21 +164,20 @@ public final class CampfireClientAutoTest {
         level.setWeatherParameters(6000, 0, false, false);
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, 0, 0);
         origin = new BlockPos(0, y, 0);
-        BlockState base = ModRegistry.CAMPFIRE.get().defaultBlockState();
-        for (int v = 0; v < 3; v++) {
-            BlockPos pos = origin.offset((v - 1) * 3, 0, 0);
-            level.setBlock(pos, base.setValue(EnhancedCampfireBlock.VARIANT, (v + 1) % 3), 3);
-        }
-        // middle one: layout 0 with food cooking on it
-        level.setBlock(origin, base.setValue(EnhancedCampfireBlock.VARIANT, 0), 3);
+        EnhancedCampfireBlock block = ModRegistry.CAMPFIRE.get();
+        // middle: the big teepee (layout 0) with food; left: cabin (1); right: star fire (2); each fire is 2x2
+        block.placeFire(level, origin, 0, Direction.NORTH);
+        block.placeFire(level, origin.offset(-5, 0, -1), 1, Direction.NORTH);
+        block.placeFire(level, origin.offset(5, 0, -1), 2, Direction.NORTH);
         if (level.getBlockEntity(origin) instanceof EnhancedCampfireBlockEntity campfire) {
             campfire.placeFood(null, new ItemStack(Items.BEEF), 6000);
             campfire.placeFood(null, new ItemStack(Items.SALMON), 6000);
+            campfire.placeFood(null, new ItemStack(Items.POTATO), 6000);
         }
-        // a few props so the light pool has something to fall on
-        level.setBlock(origin.offset(-2, 0, 2), Blocks.OAK_LOG.defaultBlockState(), 3);
-        level.setBlock(origin.offset(2, 0, -2), Blocks.SPRUCE_LOG.defaultBlockState(), 3);
-        level.setBlock(origin.offset(3, 0, 2), Blocks.HAY_BLOCK.defaultBlockState(), 3);
+        // props so the light pool has something to fall on, and a vanilla campfire for scale
+        level.setBlock(origin.offset(-2, 0, 3), Blocks.OAK_LOG.defaultBlockState(), 3);
+        level.setBlock(origin.offset(3, 0, 3), Blocks.SPRUCE_LOG.defaultBlockState(), 3);
+        level.setBlock(origin.offset(-3, 0, 6), Blocks.CAMPFIRE.defaultBlockState(), 3);
         LOG.info("[autotest] scene built at {}", origin);
     }
 

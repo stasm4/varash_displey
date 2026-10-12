@@ -13,8 +13,10 @@ import ua.varash.enhancedcampfire.block.EnhancedCampfireBlockEntity;
  * timers and the cached list of ground cells that receive the warm light pool.
  */
 public final class CampfireFxState {
-    public static final int GLOW_RADIUS = 3;
-    public static final float GLOW_REACH = 3.6F;
+    /** Cells from -GLOW_RADIUS to 1 + GLOW_RADIUS around the master block are scanned (the fire is 2x2). */
+    public static final int GLOW_RADIUS = 5;
+    /** Reach of the light pool, measured from the fire centre (blocks). */
+    public static final float GLOW_REACH = 5.6F;
 
     public final int seed;
     private long flareStart = Long.MIN_VALUE / 2;
@@ -78,13 +80,16 @@ public final class CampfireFxState {
             return;
         }
         glowCacheTick = gameTime;
-        int[] cells = new int[(GLOW_RADIUS * 2 + 1) * (GLOW_RADIUS * 2 + 1) * 3];
+        int[] cells = new int[(GLOW_RADIUS * 2 + 2) * (GLOW_RADIUS * 2 + 2) * 3];
         int n = 0;
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         BlockPos.MutableBlockPos below = new BlockPos.MutableBlockPos();
-        for (int dx = -GLOW_RADIUS; dx <= GLOW_RADIUS; dx++) {
-            for (int dz = -GLOW_RADIUS; dz <= GLOW_RADIUS; dz++) {
-                if (dx == 0 && dz == 0 || dx * dx + dz * dz > GLOW_REACH * GLOW_REACH + 1) {
+        for (int dx = -GLOW_RADIUS; dx <= GLOW_RADIUS + 1; dx++) {
+            for (int dz = -GLOW_RADIUS; dz <= GLOW_RADIUS + 1; dz++) {
+                boolean underFire = (dx == 0 || dx == 1) && (dz == 0 || dz == 1);
+                float cx = dx + 0.5F - CampfireLayouts.CENTER;
+                float cz = dz + 0.5F - CampfireLayouts.CENTER;
+                if (underFire || cx * cx + cz * cz > (GLOW_REACH + 0.5F) * (GLOW_REACH + 0.5F)) {
                     continue;
                 }
                 for (int dy = 1; dy >= -2; dy--) {

@@ -42,6 +42,15 @@
             }
           ]
         }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "enhancedcampfire:enhanced_campfire",
+          "properties": {
+            "part": "master"
+          }
+        }
       ]
     },
     {
@@ -54,7 +63,7 @@
           "functions": [
             {
               "function": "minecraft:set_count",
-              "count": 2
+              "count": 3
             },
             {
               "function": "minecraft:explosion_decay"
@@ -63,6 +72,13 @@
         }
       ],
       "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "enhancedcampfire:enhanced_campfire",
+          "properties": {
+            "part": "master"
+          }
+        },
         {
           "condition": "minecraft:inverted",
           "term": {

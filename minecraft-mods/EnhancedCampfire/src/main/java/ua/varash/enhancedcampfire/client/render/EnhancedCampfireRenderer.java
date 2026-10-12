@@ -37,7 +37,7 @@ import ua.varash.enhancedcampfire.config.ClientConfig;
 import ua.varash.enhancedcampfire.config.ClientConfig.Quality;
 
 /**
- * Renders the food on the campfire and all procedural fire visuals:
+ * Renders (for the master block of the 2x2 fire) the food on the campfire and all procedural fire visuals:
  * <ul>
  *   <li>flame tongues - every emitter of the log layout gets a bent, crossed pair of quads per layer; height,
  *   width, lean and sway come from per-campfire noise, the global wind and flare-ups; the texture is a
@@ -54,10 +54,10 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
     private static final ResourceLocation FLAME_ADD = tex("flame_sheet_add");
     private static final ResourceLocation GLOW = tex("glow_radial");
 
-    private static final int MAX_TONGUES = 8;
+    private static final int MAX_TONGUES = 12;
     /** Every tongue quad shows a whole multi-tongue flame frame, so it is drawn larger than its emitter spot. */
-    private static final float HEIGHT_MUL = 1.3F;
-    private static final float WIDTH_MUL = 1.7F;
+    private static final float HEIGHT_MUL = 1.0F;
+    private static final float WIDTH_MUL = 1.5F;
     /** Per-tongue animation parameters, computed once per frame and reused by every layer. */
     private static final int P_X = 0, P_Z = 1, P_H = 2, P_W = 3, P_SX = 4, P_SZ = 5, P_YAW = 6, P_FRAME = 7, P_SIZE = 8;
     private final float[] params = new float[MAX_TONGUES * P_SIZE];
@@ -92,22 +92,22 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
         float time = ((gameTime % 1_200_000L) + partialTick) / 20.0F;
         BlockPos pos = campfire.getBlockPos();
         Vec3 cam = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        double distSq = cam.distanceToSqr(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+        double distSq = cam.distanceToSqr(pos.getX() + CampfireLayouts.CENTER, pos.getY() + 0.8D, pos.getZ() + CampfireLayouts.CENTER);
         float glowMul = ClientConfig.GLOW_INTENSITY.get().floatValue();
         float night = nightFactor(level, pos, partialTick);
 
         if (!lit) {
             float pulse = 0.75F + 0.25F * FireNoise.fbm(time * 0.7F, fx.seed);
-            renderEmberGlow(pose, buffers, 0.32F * glowMul * pulse * (0.5F + 0.5F * night), 0.62F);
+            renderEmberGlow(pose, buffers, 0.4F * glowMul * pulse * (0.5F + 0.5F * night), 1.1F);
             return;
         }
 
         float flare = fx.flare(gameTime, partialTick);
         float intensity = fx.intensity(time, flare);
         if (ClientConfig.GROUND_GLOW.get() && glowMul > 0.0F && distSq < 48.0D * 48.0D) {
-            renderGroundGlow(pose, buffers, fx, 0.5F * glowMul * night * Mth.clamp(intensity, 0.6F, 1.6F));
+            renderGroundGlow(pose, buffers, fx, 0.62F * glowMul * night * Mth.clamp(intensity, 0.6F, 1.6F));
         }
-        renderEmberGlow(pose, buffers, (0.45F + 0.25F * night) * glowMul * Mth.clamp(intensity, 0.6F, 1.5F), 0.95F);
+        renderEmberGlow(pose, buffers, (0.55F + 0.3F * night) * glowMul * Mth.clamp(intensity, 0.6F, 1.5F), 1.5F);
 
         Quality quality = ClientConfig.FLAME_QUALITY.get();
         if (distSq > 56.0D * 56.0D) {
@@ -131,12 +131,12 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
                 continue;
             }
             pose.pushPose();
-            pose.translate(0.5F, 0.40F, 0.5F);
+            pose.translate(CampfireLayouts.CENTER, 0.27F, CampfireLayouts.CENTER);
             Direction dir = Direction.from2DDataValue((i + facing.get2DDataValue()) % 4);
             pose.mulPose(Axis.YP.rotationDegrees(-dir.toYRot()));
             pose.mulPose(Axis.XP.rotationDegrees(90.0F));
-            pose.translate(-0.3125F, -0.3125F, 0.0F);
-            pose.scale(0.375F, 0.375F, 0.375F);
+            pose.translate(-0.98F, -0.98F, 0.0F);
+            pose.scale(0.46F, 0.46F, 0.46F);
             itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, packedLight, OverlayTexture.NO_OVERLAY, pose, buffers,
                     campfire.getLevel(), seed + i);
             pose.popPose();
@@ -147,8 +147,7 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
 
     private void renderFlames(BlockState state, CampfireFxState fx, PoseStack pose, MultiBufferSource buffers, float time,
                               float intensity, float flare, Quality quality) {
-        float[][] emitters = CampfireLayouts.emitters(state.getValue(EnhancedCampfireBlock.VARIANT),
-                state.getValue(CampfireBlock.FACING));
+        float[][] emitters = CampfireLayouts.emitters(state.getValue(EnhancedCampfireBlock.VARIANT));
         int count = Math.min(emitters.length, MAX_TONGUES);
         float scale = ClientConfig.FLAME_SCALE.get().floatValue();
         float bright = ClientConfig.FLAME_INTENSITY.get().floatValue();
@@ -287,8 +286,8 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
         Matrix4f m = pose.last().pose();
         Matrix3f n = pose.last().normal();
         float y = CampfireLayouts.BASE_Y + 0.03F;
-        float lo = 0.5F - size * 0.5F;
-        float hi = 0.5F + size * 0.5F;
+        float lo = CampfireLayouts.CENTER - size * 0.5F;
+        float hi = CampfireLayouts.CENTER + size * 0.5F;
         float r = strength;
         float g = strength * 0.42F;
         float b = strength * 0.1F;
@@ -319,7 +318,7 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
         VertexConsumer vc = buffers.getBuffer(RenderType.eyes(GLOW));
         Matrix4f m = pose.last().pose();
         Matrix3f n = pose.last().normal();
-        float span = CampfireFxState.GLOW_REACH * 2.0F;
+        float span = CampfireFxState.GLOW_REACH * 2.0F + 1.0F;
         for (int c = 0; c < cells.length; c += 3) {
             int dx = cells[c];
             int dy = cells[c + 1];
@@ -330,8 +329,8 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
             float b = r * 0.17F;
             float y = dy + 0.02F;
             float x0 = dx, x1 = dx + 1, z0 = dz, z1 = dz + 1;
-            float u0 = (x0 - 0.5F) / span + 0.5F, u1 = (x1 - 0.5F) / span + 0.5F;
-            float v0 = (z0 - 0.5F) / span + 0.5F, v1 = (z1 - 0.5F) / span + 0.5F;
+            float u0 = (x0 - CampfireLayouts.CENTER) / span + 0.5F, u1 = (x1 - CampfireLayouts.CENTER) / span + 0.5F;
+            float v0 = (z0 - CampfireLayouts.CENTER) / span + 0.5F, v1 = (z1 - CampfireLayouts.CENTER) / span + 0.5F;
             vertex(vc, m, n, x0, y, z0, u0, v0, r, g, b, 1.0F);
             vertex(vc, m, n, x0, y, z1, u0, v1, r, g, b, 1.0F);
             vertex(vc, m, n, x1, y, z1, u1, v1, r, g, b, 1.0F);

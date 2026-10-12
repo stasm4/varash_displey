@@ -1,9 +1,9 @@
 {
   "block.enhancedcampfire.enhanced_campfire": "Покращене багаття",
-  "tooltip.enhancedcampfire.enhanced_campfire": "Велике багаття, що потріскує. Готує їжу, як звичайне.",
+  "tooltip.enhancedcampfire.enhanced_campfire": "Велике багаття 2×2. Готує їжу, як звичайне.",
   "subtitles.enhancedcampfire.crackle": "Багаття потріскує",
   "subtitles.enhancedcampfire.pop": "Тріщить поліно",
   "subtitles.enhancedcampfire.hiss": "Багаття шипить",
-  "subtitles.enhancedcampfire.roar": "Гуде вогонь",
+  "subtitles.enhancedcampfire.roar": "Тихо гуде вогонь",
   "enhancedcampfire.configuration.title": "Покращене багаття"
 }

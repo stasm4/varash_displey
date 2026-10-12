@@ -93,16 +93,16 @@ def collect_quads(res, model, block_y_rot=0):
     return quads
 
 
-def render(quads, yaw, pitch, size=420, night=False):
+def render(quads, yaw, pitch, size=420, night=False, center=(8, 4, 8), span=30.0):
     img = np.zeros((size, size, 3))
     img[:] = (24, 26, 34) if night else (150, 170, 190)
     zbuf = np.full((size, size), np.inf)
     R = rot_matrix('x', -pitch) @ rot_matrix('y', yaw)
-    scale = size / 30.0
+    scale = size / span
     light_dir = np.array([0.35, 1.0, 0.6])
     light_dir /= np.linalg.norm(light_dir)
     for pts, uvs, tex, emissive in quads:
-        p = (R @ (pts - np.array([8, 4, 8])).T).T
+        p = (R @ (pts - np.array(center)).T).T
         n = np.cross(pts[1] - pts[0], pts[3] - pts[0])
         nl = np.linalg.norm(n)
         if nl < 1e-9:
@@ -154,12 +154,14 @@ def main():
     ap.add_argument('-o', '--out', required=True)
     ap.add_argument('--night', action='store_true')
     ap.add_argument('--yrot', type=int, default=0)
+    ap.add_argument('--big', action='store_true', help='2x2 model spanning 0..32 px')
     args = ap.parse_args()
     rows = []
     views = [(-35, 30), (145, 30), (-120, 62)]  # yaw, pitch (camera looks at the model from these angles)
     for name in args.models:
         quads = collect_quads(args.res, load_model(args.res, name), args.yrot)
-        rows.append(np.hstack([render(quads, y, p, night=args.night) for y, p in views]))
+        kw = {'center': (16, 6, 16), 'span': 52.0} if args.big else {}
+        rows.append(np.hstack([render(quads, y, p, night=args.night, **kw) for y, p in views]))
     Image.fromarray(np.vstack(rows).clip(0, 255).astype(np.uint8)).save(args.out)
     print('wrote', args.out)
 
