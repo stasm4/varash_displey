@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [EnhancedCampfire]
+        project: [EnhancedCampfire, WoodenBench]
     defaults:
       run:
         working-directory: minecraft-mods/${{ matrix.project }}
