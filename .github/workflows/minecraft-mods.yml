@@ -5,6 +5,9 @@ on:
     paths:
       - 'minecraft-mods/**'
       - '.github/workflows/minecraft-mods.yml'
+      - '!minecraft-mods/**/*.md'
+      - '!minecraft-mods/dist/**'
+      - '!minecraft-mods/screenshots/**'
   workflow_dispatch:
 
 jobs:

@@ -1,0 +1,18 @@
+RESULT: PASS
+PASS all 180 block states have models
+PASS screenshot benches_overview
+PASS screenshot benches_angle
+PASS crosshair target is a bench
+PASS left click on a bench sits the player down
+PASS left click did not break the bench
+PASS bench still present after sitting
+PASS sitting height matches the seat surface
+PASS screenshot bench_sitting_front
+PASS screenshot bench_sitting_back
+PASS screenshot bench_sitting_pov
+PASS Shift stands the player up
+PASS player stands up in free space
+PASS left click on a seat board sits the player down
+PASS screenshot seat_board_sitting
+PASS breaking the seat stands the player up
+PASS Shift + left click breaks the bench
