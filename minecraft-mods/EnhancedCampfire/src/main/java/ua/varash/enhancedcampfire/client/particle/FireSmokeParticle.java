@@ -43,9 +43,9 @@ public class FireSmokeParticle extends BudgetParticle {
             this.lifetime = 80 + this.random.nextInt(70);
             this.startSize = 0.26F + this.random.nextFloat() * 0.16F;
             this.endSize = this.startSize * (2.6F + this.random.nextFloat() * 0.9F);
-            this.maxAlpha = 0.38F + this.random.nextFloat() * 0.12F;
-            this.darkShade = 0.11F + this.random.nextFloat() * 0.06F;
-            this.lightShade = 0.52F + this.random.nextFloat() * 0.14F;
+            this.maxAlpha = 0.28F + this.random.nextFloat() * 0.1F;
+            this.darkShade = 0.2F + this.random.nextFloat() * 0.08F;
+            this.lightShade = 0.62F + this.random.nextFloat() * 0.14F;
         }
         this.quadSize = this.startSize;
         this.roll = this.random.nextFloat() * ((float) (Math.PI * 2.0D));

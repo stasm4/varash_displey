@@ -666,7 +666,7 @@ def layout_star(lit):
     blockers = []
     for i, (axis, point, angle) in enumerate(spokes):
         thick = 5.0 if i < 4 else 4.0
-        length = 11.0 + (i % 3) * 1.0
+        length = min(11.0 + (i % 3) * 1.0, inner - 0.5)  # keep both ends inside the 0..32 model bounds
         bark = '#bark' if i % 2 else '#bark_alt'
         r = rot('y', angle, [C, 0, C]) if angle else None
         if point in ('w', 'n'):
@@ -718,6 +718,20 @@ def scaled(model_json, k):
     return out
 
 
+def check_bounds(name, data):
+    """Minecraft rejects a model whose element from/to leave -16..32 or whose UVs leave 0..16."""
+    for i, el in enumerate(data['elements']):
+        for v in el['from'] + el['to']:
+            if not -16 <= v <= 32:
+                raise ValueError(f'{name}: element {i} out of bounds: {el["from"]} {el["to"]}')
+        r = el.get('rotation')
+        if r and r['angle'] not in (-45, -22.5, 0, 22.5, 45):
+            raise ValueError(f'{name}: element {i} has an invalid rotation {r}')
+        for face, fd in el['faces'].items():
+            if any(not 0 <= u <= 16 for u in fd['uv']):
+                raise ValueError(f'{name}: element {i} face {face} has UVs outside 0..16: {fd["uv"]}')
+
+
 def write_models():
     mdir = os.path.join(ASSETS, 'models', 'block')
     for old in os.listdir(mdir):
@@ -727,6 +741,7 @@ def write_models():
         for lit in (True, False):
             m = fn(lit)
             data = m.json(model_textures(lit))
+            check_bounds(f'campfire_{i}', data)
             write_json(os.path.join(mdir, f'campfire_{i}{"" if lit else "_off"}.json'), data)
             if i == 0 and lit:
                 item = scaled(data, 0.5)

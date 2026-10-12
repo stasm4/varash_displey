@@ -56,8 +56,8 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
 
     private static final int MAX_TONGUES = 12;
     /** Every tongue quad shows a whole multi-tongue flame frame, so it is drawn larger than its emitter spot. */
-    private static final float HEIGHT_MUL = 1.0F;
-    private static final float WIDTH_MUL = 1.5F;
+    private static final float HEIGHT_MUL = 1.4F;
+    private static final float WIDTH_MUL = 1.9F;
     /** Per-tongue animation parameters, computed once per frame and reused by every layer. */
     private static final int P_X = 0, P_Z = 1, P_H = 2, P_W = 3, P_SX = 4, P_SZ = 5, P_YAW = 6, P_FRAME = 7, P_SIZE = 8;
     private final float[] params = new float[MAX_TONGUES * P_SIZE];
