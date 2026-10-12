@@ -13,6 +13,14 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+// dev-only automated client test code (see runs.clientAutotest); not packaged into the jar
+sourceSets {
+    clienttest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+}
+
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
 minecraft {
@@ -38,6 +46,21 @@ minecraft {
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
+        }
+
+        // Development-only automated client run (used by CI under Xvfb): creates a flat world, builds a test
+        // scene, takes screenshots and quits. Its code lives in src/clienttest and is never part of the mod jar.
+        clientAutotest {
+            parent runs.client
+            property 'forge.logging.console.level', 'info'
+            property "${mod_id}.autotest", 'true'
+            args '--width', '1280', '--height', '720'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                    source sourceSets.clienttest
+                }
+            }
         }
 
         // Runs every @GameTest of this mod on a headless server and exits with a non-zero code on failure.

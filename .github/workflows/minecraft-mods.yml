@@ -11,7 +11,7 @@ jobs:
   build:
     name: ${{ matrix.project }}
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 50
     strategy:
       fail-fast: false
       matrix:
@@ -36,15 +36,60 @@ jobs:
           restore-keys: gradle-${{ matrix.project }}-
 
       - name: Build (compile + reobfuscated jar)
-        run: chmod +x gradlew && ./gradlew build --stacktrace --no-daemon
+        run: chmod +x gradlew && ./gradlew build --no-daemon
 
       - name: GameTests on a headless Forge server
-        run: ./gradlew runGameTestServer --stacktrace --no-daemon
+        run: ./gradlew runGameTestServer --no-daemon
+
+      - name: Automated client run (Xvfb + Mesa software OpenGL)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q xvfb libgl1-mesa-dri mesa-utils > /dev/null
+          mkdir -p run
+          printf 'onboardAccessibility:false\npauseOnLostFocus:false\nskipMultiplayerWarning:true\ntutorialStep:none\nrenderDistance:6\nsimulationDistance:6\nsoundCategory_master:0.0\n' > run/options.txt
+          export LIBGL_ALWAYS_SOFTWARE=1
+          timeout 1200 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClientAutotest --no-daemon || echo "client exited with $?"
+          echo "------ autotest-result.txt ------"
+          cat run/autotest-result.txt
+          grep -q "RESULT: PASS" run/autotest-result.txt
+
+      - name: Scan the client log for problems caused by the mod
+        if: always()
+        run: |
+          LOG=run/logs/latest.log
+          [ -f "$LOG" ] || exit 0
+          MODID=$(grep '^mod_id=' gradle.properties | cut -d= -f2)
+          grep -inE "(exception|error|missing|unable|failed|not found).*${MODID}|${MODID}.*(exception|error|missing|unable|failed|not found)" "$LOG" | grep -v "autotest\] PASS" | head -60 || true
+          if grep -iqE "(Exception loading blockstate|Unable to load model|Missing textures|Unable to resolve texture|Unable to parse|Couldn't parse).*${MODID}" "$LOG"; then
+            echo "Resource loading problems for ${MODID} found"; exit 1
+          fi
+
+      - name: Export jar and screenshots into the log (base64)
+        if: always()
+        run: |
+          python3 -m pip install -q pillow
+          mkdir -p export
+          python3 - <<'EOF'
+          import glob, os
+          from PIL import Image
+          for f in sorted(glob.glob('run/screenshots/*.png')):
+              im = Image.open(f).convert('RGB')
+              im.thumbnail((1280, 720))
+              im.save(os.path.join('export', os.path.basename(f)[:-4] + '.jpg'), quality=86)
+          EOF
+          cp build/libs/*.jar export/ 2>/dev/null || true
+          cp run/autotest-result.txt export/ 2>/dev/null || true
+          for f in export/*; do
+            echo "=====BEGIN $(basename "$f") $(sha256sum "$f" | cut -c1-64)====="
+            base64 -w 120 "$f"
+            echo "=====END====="
+          done
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: ${{ matrix.project }}-jar
-          path: minecraft-mods/${{ matrix.project }}/build/libs/*.jar
+          name: ${{ matrix.project }}-jar-and-screenshots
+          path: minecraft-mods/${{ matrix.project }}/export/
 
       - uses: actions/upload-artifact@v4
         if: always()
