@@ -235,31 +235,53 @@ def fire_color(i):
     return out
 
 
-def flame_field(t, n_main, n_side, fw=32, fh=64):
-    """Intensity field [0,1] of one flame frame at loop phase t in [0,1)."""
+def flame_field(t, n_main, n_side, fw=32, fh=64, tongues=None):
+    """Intensity field [0,1] of one flame frame at loop phase t in [0,1).
+
+    Several tongues of different height share a wide glowing base; each tongue sways on its own, turbulence
+    eats holes into the body and tears small licks off the tips.  All time dependence is periodic in t, so the
+    sheet loops (and the renderer additionally desynchronises tongues and blends frames).
+    """
     ys, xs = np.mgrid[0:fh, 0:fw].astype(np.float64)
     u = (xs + 0.5) / fw * 2 - 1           # -1..1
     v = 1 - (ys + 0.5) / fh               # 0 bottom .. 1 top
+    ang = t * 2 * np.pi
     speed = 1.6
 
     def scrolled(fn, x, y, scale_y):
-        # loopable upward scroll: blend two copies offset by one loop period
         a = fn(x, y * scale_y - t * speed)
         b = fn(x, y * scale_y - (t - 1) * speed)
         return a * (1 - t) + b * t
 
-    sway = scrolled(lambda x, y: n_side.fbm(x, y, 3), np.zeros_like(v) + 3.7, v, 1.3)
-    ud = u + (sway - 0.5) * 1.1 * v ** 1.3
-    width = np.sqrt(np.clip(v * 5.0, 0, 1)) * (1 - v) ** 0.75 * 0.92
-    width = np.maximum(width, 1e-3)
-    body = 1 - np.abs(ud) / width
-    turb = scrolled(lambda x, y: n_main.fbm(x, y, 4), u * 2.3, v, 2.6)
-    shape = body + (turb - 0.5) * (0.7 + 1.1 * v)
-    inten = np.clip(shape * 1.6, 0, 1)
-    inten = inten ** 1.2 * (1 - v ** 2.4)
+    if tongues is None:
+        # (centre u, base height, width, phase)
+        tongues = [(0.0, 0.95, 0.46, 0.0), (-0.33, 0.68, 0.34, 1.7), (0.31, 0.76, 0.34, 3.9),
+                   (-0.15, 0.55, 0.28, 5.1), (0.17, 0.6, 0.28, 2.6)]
+    field = np.zeros_like(u)
+    for i, (cu, h, w, ph) in enumerate(tongues):
+        # periodic height pulse and sway for this tongue
+        hh = h * (0.82 + 0.12 * np.sin(ang + ph) + 0.06 * np.sin(2 * ang + ph * 1.7))
+        sway = (n_side.fbm(np.full_like(v, 3.1 * i + np.cos(ang + ph) * 0.8),
+                           v * 1.6 + np.sin(ang + ph) * 0.8, 3) - 0.5) * 0.9 * v ** 1.2
+        vv = v / max(hh, 1e-3)
+        width = w * np.sqrt(np.clip(vv * 4.0, 0, 1)) * np.clip(1 - vv, 0, 1) ** 0.7
+        body = 1 - np.abs(u - cu - sway) / np.maximum(width, 1e-3)
+        body = np.where(vv < 1, body, -1)
+        field = np.maximum(field, body)
+    # wide glowing base the tongues grow out of
+    base = (1 - np.abs(u) / 0.7) * np.clip(1 - v / 0.22, 0, 1)
+    field = np.maximum(field, base)
+    turb = scrolled(lambda x, y: n_main.fbm(x, y, 4), u * 2.6, v, 2.8)
+    shape = field + (turb - 0.5) * (0.5 + 1.5 * v)
+    inten = np.clip(shape * 1.7, 0, 1) ** 1.1
+    inten *= np.clip(1.15 - v ** 2.0, 0, 1)
+    inten *= np.clip((field + 0.3) / 0.3, 0, 1)        # no stray noise far away from any tongue
+    inten *= np.clip((1 - np.abs(u)) / 0.18, 0, 1)     # never touch the frame edges
+    inten *= np.clip((0.98 - v) / 0.2, 0, 1)            # fade out before the top of the frame
+    inten = np.where(inten < 0.14, 0, inten)            # drop faint stray specks
     # hot core near the base
-    core = np.clip(1 - np.abs(ud) / (width * 0.55), 0, 1) * np.clip(1 - v * 1.6, 0, 1)
-    inten = np.clip(inten * 0.82 + core * 0.35 * (inten > 0.05), 0, 1)
+    core = np.clip(1 - np.abs(u) / 0.32, 0, 1) * np.clip(1 - v * 3.0, 0, 1)
+    inten = np.clip(inten * 0.88 + core * 0.28 * (inten > 0.05), 0, 1)
     return inten
 
 
@@ -321,14 +343,20 @@ def write_particles():
             x = int(np.clip(x + r.integers(-1, 2), 1, 6))
             y = int(np.clip(y + r.integers(-1, 2), 1, 6))
         save(to_image(rgb, a), os.path.join(p, f'ash_{i}.png'))
-    # smoke puffs: soft, lumpy, white (tinted in code)
+    # smoke puffs: soft lumpy clouds, 32x32, white (tinted in code)
     for i in range(8):
-        n = fbm(16, 16, 300 + i, base_cell=4, octaves=3, tile=False)
-        ys, xs = np.mgrid[0:16, 0:16]
-        d = np.hypot(xs - 7.5, ys - 7.5) / 8
-        a = np.clip((1 - d * (1.05 + 0.25 * n)) * 1.6 - (1 - n) * 0.55, 0, 1)
-        a = np.floor(a * 8) / 8 * 230
-        shade_ = 200 + n * 55
+        n = fbm(32, 32, 300 + i, base_cell=8, octaves=4, tile=False)
+        ys, xs = np.mgrid[0:32, 0:32]
+        rr = rng(400 + i)
+        a = np.zeros((32, 32))
+        for _ in range(4):  # a few overlapping lobes
+            cx, cy = 16 + rr.normal(0, 2.6), 16 + rr.normal(0, 2.6)
+            rad = 10.5 + rr.random() * 4.0
+            d = np.hypot(xs - cx + 0.5, ys - cy + 0.5) / rad
+            a = np.maximum(a, np.clip(1 - d, 0, 1) ** 1.4)
+        a = np.clip(a * (0.65 + 0.7 * n) - 0.05, 0, 1)
+        a = np.floor(a * 24) / 24 * 210
+        shade_ = 205 + n * 50
         save(to_image(np.dstack([shade_] * 3), a), os.path.join(p, f'smoke_{i}.png'))
     # small flame licks (6 frames, coloured)
     n_main, n_side = Noise2(77), Noise2(78)

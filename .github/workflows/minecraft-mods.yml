@@ -77,11 +77,12 @@ jobs:
               im.thumbnail((1280, 720))
               im.save(os.path.join('export', os.path.basename(f)[:-4] + '.jpg'), quality=86)
           EOF
-          cp build/libs/*.jar export/ 2>/dev/null || true
           cp run/autotest-result.txt export/ 2>/dev/null || true
-          for f in export/*; do
+          cp build/libs/*.jar export/ 2>/dev/null || true
+          for f in export/*.txt export/*.jpg export/*.jar; do
+            [ -f "$f" ] || continue
             echo "=====BEGIN $(basename "$f") $(sha256sum "$f" | cut -c1-64)====="
-            base64 -w 120 "$f"
+            base64 -w 3000 "$f"
             echo "=====END====="
           done
 

@@ -73,7 +73,8 @@ public final class SeatGameTests {
     public static void sitOccupyAndStandUp(GameTestHelper helper) {
         helper.setBlock(SEAT, bench(Direction.NORTH));
         Player first = playerNear(helper, 2);
-        helper.assertTrue(SeatManager.trySit(first, helper.absolutePos(SEAT)) == Result.SAT, "first player must sit");
+        Result sat = SeatManager.trySit(first, helper.absolutePos(SEAT));
+        helper.assertTrue(sat == Result.SAT, "first player must sit, got " + sat);
         helper.assertTrue(first.getVehicle() instanceof SeatEntity, "first player must ride a seat");
         SeatEntity seat = (SeatEntity) first.getVehicle();
         double surface = helper.absolutePos(SEAT).getY() + BenchBlock.SEAT_HEIGHT;
@@ -97,7 +98,8 @@ public final class SeatGameTests {
     public static void breakingSeatStandsPlayerUp(GameTestHelper helper) {
         helper.setBlock(SEAT, ModRegistry.SEAT_BOARDS.get(Wood.SPRUCE).get().defaultBlockState());
         Player player = playerNear(helper, 2);
-        helper.assertTrue(SeatManager.trySit(player, helper.absolutePos(SEAT)) == Result.SAT, "must sit on the seat board");
+        Result sat = SeatManager.trySit(player, helper.absolutePos(SEAT));
+        helper.assertTrue(sat == Result.SAT, "must sit on the seat board, got " + sat);
         double surface = helper.absolutePos(SEAT).getY() + SeatBoardBlock.SEAT_HEIGHT;
         helper.assertTrue(Math.abs(player.getVehicle().getY() - surface) < 1.0E-3, "seat on the board surface");
         helper.getLevel().destroyBlock(helper.absolutePos(SEAT), true);

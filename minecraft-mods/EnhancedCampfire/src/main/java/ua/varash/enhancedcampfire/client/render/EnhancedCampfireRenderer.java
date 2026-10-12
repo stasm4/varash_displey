@@ -55,6 +55,9 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
     private static final ResourceLocation GLOW = tex("glow_radial");
 
     private static final int MAX_TONGUES = 8;
+    /** Every tongue quad shows a whole multi-tongue flame frame, so it is drawn larger than its emitter spot. */
+    private static final float HEIGHT_MUL = 1.3F;
+    private static final float WIDTH_MUL = 1.7F;
     /** Per-tongue animation parameters, computed once per frame and reused by every layer. */
     private static final int P_X = 0, P_Z = 1, P_H = 2, P_W = 3, P_SX = 4, P_SZ = 5, P_YAW = 6, P_FRAME = 7, P_SIZE = 8;
     private final float[] params = new float[MAX_TONGUES * P_SIZE];
@@ -160,11 +163,11 @@ public class EnhancedCampfireRenderer implements BlockEntityRenderer<EnhancedCam
             int o = i * P_SIZE;
             params[o + P_X] = e[0] + FireNoise.noise(time * 0.6F, s + 3) * 0.03F;
             params[o + P_Z] = e[1] + FireNoise.noise(time * 0.6F, s + 5) * 0.03F;
-            params[o + P_H] = e[2] * scale * intensity * (0.8F + 0.26F * n1 + 0.06F * n2) * (1.0F + flare * (i == 0 ? 0.6F : 0.35F));
-            params[o + P_W] = e[3] * scale * (0.93F + 0.12F * FireNoise.noise(time * 2.1F, s + 11)) * (1.0F + flare * 0.25F);
+            params[o + P_H] = e[2] * HEIGHT_MUL * scale * intensity * (0.84F + 0.22F * n1 + 0.05F * n2) * (1.0F + flare * (i == 0 ? 0.6F : 0.35F));
+            params[o + P_W] = e[3] * WIDTH_MUL * scale * (0.93F + 0.12F * FireNoise.noise(time * 2.1F, s + 11)) * (1.0F + flare * 0.25F);
             // lean: own turbulence + global wind, grows with height inside tongue()
-            params[o + P_SX] = FireNoise.fbm(time * 0.9F, s + 21) * 0.17F + windX * 0.08F;
-            params[o + P_SZ] = FireNoise.fbm(time * 0.85F, s + 29) * 0.17F + windZ * 0.08F;
+            params[o + P_SX] = FireNoise.fbm(time * 0.9F, s + 21) * 0.09F + windX * 0.035F;
+            params[o + P_SZ] = FireNoise.fbm(time * 0.85F, s + 29) * 0.09F + windZ * 0.035F;
             params[o + P_YAW] = i * 1.7F + (fx.seed % 628) * 0.01F + time * ((i & 1) == 0 ? 0.11F : -0.09F);
             params[o + P_FRAME] = time * (11.0F + (i % 3) * 2.5F) + i * 5.3F + (fx.seed & 15);
         }
