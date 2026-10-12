@@ -25,7 +25,7 @@ import ua.varash.enhancedcampfire.block.EnhancedCampfireBlockEntity;
 @GameTestHolder(EnhancedCampfireMod.MODID)
 @PrefixGameTestTemplate(false)
 public final class CampfireGameTests {
-    private static final BlockPos POS = new BlockPos(3, 1, 3);
+    private static final BlockPos POS = new BlockPos(3, 2, 3); // the template floor is at relative y = 1
 
     private CampfireGameTests() {
     }

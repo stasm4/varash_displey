@@ -30,7 +30,7 @@ import ua.varash.woodenbench.seat.SeatManager.Result;
 @GameTestHolder(WoodenBenchMod.MODID)
 @PrefixGameTestTemplate(false)
 public final class SeatGameTests {
-    private static final BlockPos SEAT = new BlockPos(3, 1, 3);
+    private static final BlockPos SEAT = new BlockPos(3, 2, 3); // the template floor is at relative y = 1
 
     private SeatGameTests() {
     }
@@ -142,7 +142,7 @@ public final class SeatGameTests {
     @GameTest(template = "platform")
     public static void cannotSitThroughAWall(GameTestHelper helper) {
         helper.setBlock(SEAT, bench(Direction.NORTH));
-        for (int y = 1; y <= 3; y++) {
+        for (int y = 2; y <= 4; y++) {
             for (int x = 0; x <= 6; x++) {
                 helper.setBlock(new BlockPos(x, y, SEAT.getZ() + 1), Blocks.GLASS.defaultBlockState());
             }
